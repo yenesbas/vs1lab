@@ -34,7 +34,7 @@ app.use(logger('dev'));
 
 // Set content processing
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({ extended: true }));
 
 /**
  * VS1LAB:
@@ -42,8 +42,7 @@ app.use(express.urlencoded({ extended: false }));
  * Test the result in a browser here: 'http://localhost:3000/'.
  */
 
-// TODO: ... your code here ...
-
+app.use(express.static(path.join(__dirname, 'public')));
 // Set dedicated script for routing
 app.use('/', indexRouter);
 
