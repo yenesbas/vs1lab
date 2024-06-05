@@ -1,54 +1,37 @@
-const { tagList } = require("../../models/geotag-examples");
-
 function updateLocation() {
-    // Überprüfen, ob die Felder für Latitude und Longitude bereits Werte enthalten
-    const latField = document.getElementById("tagging-lat");
-    const lonField = document.getElementById("tagging-lon");
-    const latHiddenField = document.getElementById("tagging-lath");
-    const lonHiddenField = document.getElementById("tagging-lonh");
+    LocationHelper.findLocation((locationHelper) => {
+        const lat = locationHelper.latitude;
+        const lon = locationHelper.longitude;
+        
+        document.getElementById("tagging-lat").value = lat;
+        document.getElementById("tagging-lon").value = lon;
 
-    if (!latField.value || !lonField.value) {
-        // Wenn die Felder leer sind, rufe LocationHelper.findLocation() auf
-        LocationHelper.findLocation((locationHelper) => {
-            const lat = locationHelper.latitude;
-            const lon = locationHelper.longitude;
+        document.getElementById("tagging-lath").value = lat; // versteckte eingaben
+        document.getElementById("tagging-lonh").value = lon; 
+        //mapManager.initMap(lat, lon);
+        //mapManager.updateMarkers(lat, lon, []); 
 
-            latField.value = lat;
-            lonField.value = lon;
-            latHiddenField.value = lat;
-            lonHiddenField.value = lon;
+        //var mm = L.map('mapView', {center: [lat, lon],zoom: 13});
+        //L.marker([lat, lon]).addTo(mm);
 
-            const mapp = new MapManager();
+        const mapp = new MapManager;
 
-            mapp.initMap(lat, lon);
-            mapp.updateMarkers(lat, lon, tags);
-
-            const mapViewImg = document.getElementById("mapView");
-            const resultSpan = document.querySelector('.discovery__map span');
-            if (mapViewImg) {
-                mapViewImg.remove();
-            }
-            if (resultSpan) {
-                resultSpan.remove();
-            }
-        });
-    } else {
-        // Falls die Felder bereits Werte enthalten, führe die Kartenerstellung direkt durch
-        const lat = parseFloat(latField.value);
-        const lon = parseFloat(lonField.value);
-
-        const mapp = new MapManager();
-
-        mapp.initMap(lat, lon);
-        mapp.updateMarkers(lat, lon);
-
+        mapp.initMap(lat,lon);
+        mapp.updateMarkers(lat,lon);
+        
+        //finder methode und remove
         const mapViewImg = document.getElementById("mapView");
-        const resultSpan = document.querySelector('.discovery__map span');
+        const resultSpan = document.getElementById('.discovery__map span');
         if (mapViewImg) {
             mapViewImg.remove();
         }
         if (resultSpan) {
             resultSpan.remove();
         }
-    }
+    });
 }
+
+// Wait for the page to fully load its DOM content, then call updateLocation
+document.addEventListener("DOMContentLoaded", () => {
+    updateLocation();
+});
